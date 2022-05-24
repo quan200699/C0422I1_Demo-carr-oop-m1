@@ -1,9 +1,10 @@
 let canvas = document.getElementById('game');
 let ctx = canvas.getContext('2d');
 let car = new Car(10, 300, 100, 50, 10);
-let obstacle = new Obstacle(200, 10, 50, 50, 10);
+let obstacle = new Obstacle(200, 10, 50, 50, 20);
 obstacle.drawObstacle(ctx);
 car.drawCar(ctx);
+let intervalId;
 
 function move() {
     switch (event.keyCode) {
@@ -31,6 +32,7 @@ function update() {
     ctx.clearRect(0, 0, 800, 600);
     obstacle.drawObstacle(ctx);
     car.drawCar(ctx);
+    checkCollision();
 }
 
 function moveObstacle() {
@@ -39,9 +41,24 @@ function moveObstacle() {
     }
     obstacle.moveDown();
     update();
-    requestAnimationFrame(moveObstacle);
 }
 
-moveObstacle();
+function checkCollision() {
+    if (obstacle.y + obstacle.height - obstacle.speed >= car.y && obstacle.y + obstacle.height  - obstacle.speed <= car.y + car.height) {
+        if (car.x <= obstacle.x + obstacle.width && car.x >= obstacle.x) {
+            alert('thua');
+            clearInterval(intervalId);
+        } else if (car.x + car.width <= obstacle.x + obstacle.width && car.x + car.width >= obstacle.x) {
+            alert('thua');
+            clearInterval(intervalId);
+        } else if (obstacle.x <= car.x + car.width && obstacle.x >= car.x) {
+            alert('thua');
+            clearInterval(intervalId);
+        } else if (obstacle.x + obstacle.width <= car.x + car.width && obstacle.x + obstacle.width >= car.x) {
+            alert('thua');
+            clearInterval(intervalId);
+        }
+    }
+}
 
-// setInterval(moveObstacle, 1000)
+intervalId = setInterval(moveObstacle, 100)
